@@ -5,6 +5,22 @@ export const ToastContext = React.createContext();
 function ToastProvider({ children }) {
   const [toasts, setToasts] = React.useState([]);
 
+  React.useEffect(() => {
+    function dismissAllToasts(e) {
+      if (e.key !== "Escape") {
+        return;
+      }
+
+      setToasts([]);
+    }
+
+    window.addEventListener("keyup", dismissAllToasts);
+
+    return () => {
+      window.removeEventListener("keyup", dismissAllToasts);
+    };
+  }, []);
+
   function addToastMessage({ message, variant }) {
     if (message === "" || variant === "") {
       throw new Error(
